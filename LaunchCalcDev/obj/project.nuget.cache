@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ys6PTSt7wZprP6ppKNT/QDUIcodQTQ+pPIfxuYtKEZ1pxqLjrOhatMs8Gj1K9EQFXJwe5BJSp8iHsN72IXrhmw==",
+  "dgSpecHash": "JsbnVcjXTacjKhHvNQgpI5ZapbnHlgwqXw4NETH/+19dAKUphmll0f70Wb7wbylXHSEIhxi/Va3XCcBu5VJ+WQ==",
   "success": true,
-  "projectFilePath": "/Users/samjones/Projects/LaunchCalcDev/LaunchCalcDev/LaunchCalcDev.csproj",
+  "projectFilePath": "/Users/samjones/Projects/LDHCalc/LaunchCalcDev/LaunchCalcDev.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

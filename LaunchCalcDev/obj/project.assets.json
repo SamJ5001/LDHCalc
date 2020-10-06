@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/samjones/Projects/LaunchCalcDev/LaunchCalcDev/LaunchCalcDev.csproj",
+      "projectUniqueName": "/Users/samjones/Projects/LDHCalc/LaunchCalcDev/LaunchCalcDev.csproj",
       "projectName": "LaunchCalcDev",
-      "projectPath": "/Users/samjones/Projects/LaunchCalcDev/LaunchCalcDev/LaunchCalcDev.csproj",
+      "projectPath": "/Users/samjones/Projects/LDHCalc/LaunchCalcDev/LaunchCalcDev.csproj",
       "packagesPath": "/Users/samjones/.nuget/packages/",
-      "outputPath": "/Users/samjones/Projects/LaunchCalcDev/LaunchCalcDev/obj/",
+      "outputPath": "/Users/samjones/Projects/LDHCalc/LaunchCalcDev/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/samjones/.config/NuGet/NuGet.Config"

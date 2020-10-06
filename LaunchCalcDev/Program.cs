@@ -9,17 +9,31 @@ namespace LaunchCalcDev
 
     public static class dataEntry
     {
-        // Change this once I've got a stable input module. I need to make these date entries then crunch them into days
+
+        // So I need to capture DATES in here, and then convert these to int distance types in the number crunch section.
         public static bool dataEntryinCode = true;
 
+        /*
         internal static int dELockIMF = 30;
         internal static int dEiMFDue = 30;
         internal static int dEdueLaunch = 30;
         internal static bool dEchildCasting = false;
         internal static bool dEpldlRequred = false;
         internal static bool dEcmWorkflow = false;
+        */
 
-        internal static DateTime dELastLockDate = new DateTime(2020, 03, 01);
+
+        // ENTER DATES HERE
+        internal static DateTime inputLOCK = new DateTime(2021, 04, 16);
+        internal static DateTime inputIMF = new DateTime(2021, 05, 28);
+
+        // I'll define which one this goes to based upon enum selection
+        internal static DateTime inputME = new DateTime(2021, 06, 04);
+
+        // False = ME0, True = ME1 ("Tick this box for M&E Centric timeline")
+        internal static bool inputMEWORKFLOW = false;
+
+
     }
 
     public enum contentType
@@ -31,6 +45,19 @@ namespace LaunchCalcDev
     {
         English,
         Other
+    }
+    public enum MEQCWorkflow
+    {
+        // WFO = Standard, Post-IMF Delivery QC
+        WF0,
+        // WF1 = M&E Centric Timeline
+        WF1
+    }
+    public enum QCType
+    {
+        Premix,
+        Postmix,
+        CQC
     }
 
 
@@ -100,15 +127,19 @@ namespace LaunchCalcDev
                 if (dueLaunch == 0) { dueLaunch = setDefaultsErrorInt(dueLaunch, "dueLaunch"); }
 
             }
-            // Folding down this error check, as I'm going to be taking all of this in for code until I'm half done anyway
+            // Folding down this error check, as I'm going to be taking all of this in for code until I'm half done anyway. I'll need to set up some data-type agnostic error check.
 
-            // Crunch Timeline returns an int value of days between kick-off and ideal launch, by summing the timelines provided and distorting/manimpulating them with project factors
+
+            // SO I need a method here to convert those dates to timelines. I need to calculate these differentials between 
+
+
+            //Crunch Timeline returns an int value of days between kick-off and ideal launch, by summing the timelines provided and distorting/manimpulating them with project factors
+
             totalTimeline = Calculator.crunchTimeline(DateTime.Today, lockIMF, iMFDue, dueLaunch);
 
 
 
             // Set Yellow / Red Offsets
-
             yellowFactor = (dueLaunch * 0.75f);
             redFactor = (dueLaunch * 0.5f);
 
@@ -121,10 +152,6 @@ namespace LaunchCalcDev
 
 
         // The thing I'm multiplying back with for basic testing at this point. This is not realistic and would require a proportional offset of date / launch.
-
-
-
-
 
 
 
@@ -154,20 +181,22 @@ namespace LaunchCalcDev
                 Console.WriteLine("ERROR; Unable to determine datetime.");
                 return DateTime.MinValue;
             }
-                
+
 
         }
 
         public void pullStaticData()
         {
-            lastLockDate = dataEntry.dELastLockDate;
 
+            // Check booleans for casting etc here? This is where I take in the manual inputs which we can assume to be defaults for now.
+
+            /*
+             * 
+             * lastLockDate = dataEntry.dELastLockDate;
             lockIMF = dataEntry.dELockIMF;
             iMFDue = dataEntry.dEiMFDue;
             dueLaunch = dataEntry.dEdueLaunch;
-            // Check booleans for casting etc here? This is where I take in the manual inputs which we can assume to be defaults for now.
-
-
+            */
         }
 
 

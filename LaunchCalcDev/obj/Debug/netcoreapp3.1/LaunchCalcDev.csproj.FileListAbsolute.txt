@@ -10,3 +10,15 @@
 /Users/samjones/Projects/LaunchCalcDev/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.dll
 /Users/samjones/Projects/LaunchCalcDev/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.pdb
 /Users/samjones/Projects/LaunchCalcDev/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.genruntimeconfig.cache
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/bin/Debug/netcoreapp3.1/LaunchCalcDev.deps.json
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/bin/Debug/netcoreapp3.1/LaunchCalcDev.runtimeconfig.json
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/bin/Debug/netcoreapp3.1/LaunchCalcDev.runtimeconfig.dev.json
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/bin/Debug/netcoreapp3.1/LaunchCalcDev.dll
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/bin/Debug/netcoreapp3.1/LaunchCalcDev.pdb
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.csprojAssemblyReference.cache
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.AssemblyInfoInputs.cache
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.AssemblyInfo.cs
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.csproj.CoreCompileInputs.cache
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.dll
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.pdb
+/Users/samjones/Projects/LDHCalc/LaunchCalcDev/obj/Debug/netcoreapp3.1/LaunchCalcDev.genruntimeconfig.cache
