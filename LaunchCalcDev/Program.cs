@@ -65,9 +65,11 @@ namespace LaunchCalcDev
 
         {
             Data data = new Data();
+            SLA SLARef = new SLA();
 
             data.setEnums();
             data.setupData(data);
+
         }
 
         public static void Output(DateTime dueDate, DateTime green, DateTime yellow, DateTime red)
@@ -251,6 +253,7 @@ namespace LaunchCalcDev
             mE0Date = dataEntry.inputME0;
             mE1Date = dataEntry.inputME1;
 
+
         }
 
 
@@ -296,5 +299,17 @@ namespace LaunchCalcDev
             }
             return timelineSummed;
         }
+    }
+
+    // SLAs based on Approx Help Centre Documentation (to update) factored in with non-working days. I need to add a switch here depending on feature / batch length.
+    public static class SLA
+    {
+        public static int LOCKIMF = 42;
+        public static int LOCKME1 = 28;
+        public static int ME1IMF = 14;
+        public static int IMFDUE = 56;
+        public static int IMFME0 = 14;
+        public static int ME0DUE = 42;
+        public static int DUELAUNCH = 28;
     }
 }
