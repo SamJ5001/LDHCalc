@@ -18,7 +18,7 @@ namespace LaunchCalcDev
         internal static bool dEchildCasting = false;
         internal static bool dEpldlRequred = false;
         internal static bool dEcmWorkflow = false;
-        
+
 
         // ENTER DATES HERE
         internal static DateTime inputLOCK = new DateTime(2021, 04, 16);
@@ -47,7 +47,9 @@ namespace LaunchCalcDev
         // WFO = Standard, Post-IMF Delivery QC
         WF0,
         // WF1 = M&E Centric Timeline
-        WF1
+        WF1,
+        // Debug(?) to stick with just the core AV asseets. Could be useful for licesned / PM-only workflows
+        NoWorkflow
     }
     public enum QCType
     {
@@ -145,6 +147,9 @@ namespace LaunchCalcDev
                 case MEQCWorkflow.WF1:
                     mEQCWorkflow = MEQCWorkflow.WF1;
                     break;
+                case MEQCWorkflow.NoWorkflow:
+                    mEQCWorkflow = MEQCWorkflow.NoWorkflow;
+                    break;
             }
             switch (qCType)
             {
@@ -158,11 +163,7 @@ namespace LaunchCalcDev
                     qCType = QCType.CQC;
                     break;
             }
-
-
-
         }
-
 
         public void setupData(Data dataClass)
 
@@ -276,7 +277,7 @@ namespace LaunchCalcDev
 
     static class Calculator
     {
-        public static int crunchTimeline(DateTime today, int locktoIMF, int iMFtoDue, int lockME1, int mE1IMF, int iMFME0, int mE0Due, int duetoLaunch)
+        public static int crunchTimeline(DateTime today, int locktoIMF, int iMFtoDue, int locktoME1, int mE1toIMF, int iMFtoME0, int mE0toDue, int duetoLaunch)
         {
             // This is where I'm gonna put the more actual mathy stuff.
 
@@ -285,9 +286,12 @@ namespace LaunchCalcDev
             switch (Data.mEQCWorkflow)
             {
                 case MEQCWorkflow.WF0:
-                    timelineSummed = locktoIMF + iMFtoDue + duetoLaunch;
+                    timelineSummed = locktoIMF + iMFtoME0 + mE0toDue + duetoLaunch;
                     break;
                 case MEQCWorkflow.WF1:
+                    timelineSummed = locktoME1 + mE1toIMF + iMFtoDue + duetoLaunch;
+                    break;
+                case MEQCWorkflow.NoWorkflow:
                     timelineSummed = locktoIMF + iMFtoDue + duetoLaunch;
                     break;
                 default:
