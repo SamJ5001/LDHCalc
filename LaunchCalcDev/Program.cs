@@ -65,11 +65,9 @@ namespace LaunchCalcDev
 
         {
             Data data = new Data();
-            SLA SLARef = new SLA();
 
             data.setEnums();
             data.setupData(data);
-
         }
 
         public static void Output(DateTime dueDate, DateTime green, DateTime yellow, DateTime red)
@@ -244,16 +242,12 @@ namespace LaunchCalcDev
         {
             // Check booleans for casting etc here? This is where I take in the manual inputs which we can assume to be defaults for now.
 
-
-
             lockDate = dataEntry.inputLOCK;
             iMFDate = dataEntry.inputIMF;
             dueDate = dataEntry.inputDue;
 
             mE0Date = dataEntry.inputME0;
             mE1Date = dataEntry.inputME1;
-
-
         }
 
 
