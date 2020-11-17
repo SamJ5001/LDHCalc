@@ -64,22 +64,21 @@ namespace LaunchCalcDev
         static void Main(string[] args)
 
         {
-
             Data data = new Data();
 
             data.setEnums();
             data.setupData(data);
         }
 
-        public static void Output(DateTime green, DateTime yellow, DateTime red)
+        public static void Output(DateTime dueDate, DateTime green, DateTime yellow, DateTime red)
         {
+            Console.WriteLine($"Estimated Delivery Date for Service Assets: {dueDate.ToShortDateString()} ");
+
             Console.WriteLine("Recommended Launch Dates as follows:");
             Console.WriteLine($"Green: {green.ToShortDateString()}");
             Console.WriteLine($"Yellow: {yellow.ToShortDateString()}");
             Console.WriteLine($"Red: {red.ToShortDateString()}");
         }
-
-
     }
 
 
@@ -197,13 +196,11 @@ namespace LaunchCalcDev
 
             dueLaunch = 30;
 
-
             totalTimeline = Calculator.crunchTimeline(DateTime.Today, lockIMF, iMFDue, lockME1, mE1IMF, iMFME0, mE0Due, dueLaunch);
 
-
-            // Set Yellow / Red Offsets
-            yellowFactor = 7;
-            redFactor = 14;
+            // Set Yellow / Red Offsets - need to get a little more specific with these. For now, I'm talking about 4 weeks / 2 weeks / 1 week before launch.
+            yellowFactor = 14;
+            redFactor = 21;
 
             Console.WriteLine("Yellow: " + yellowFactor);
             Console.WriteLine("Red: " + redFactor);
@@ -212,7 +209,7 @@ namespace LaunchCalcDev
             greenOut = LightSum(0, totalTimeline);
             yellowOut = LightSum(1, totalTimeline);
             redOut = LightSum(2, totalTimeline);
-            Program.Output(greenOut, yellowOut, redOut);
+            Program.Output(dueDate, greenOut, yellowOut, redOut);
         }
 
 
