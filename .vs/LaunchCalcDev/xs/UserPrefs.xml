@@ -1,7 +1,7 @@
 ﻿<Properties StartupConfiguration="{D9334E23-CDB5-4C58-85FD-219D3C917108}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="LaunchCalcDev/Program.cs">
     <Files>
-      <File FileName="LaunchCalcDev/Program.cs" Line="133" Column="125" />
+      <File FileName="LaunchCalcDev/Program.cs" Line="193" Column="56" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.ItemProperties.LaunchCalcDev PreferredExecutionTarget="MonoDevelop.Default" />
