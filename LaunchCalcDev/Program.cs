@@ -15,34 +15,29 @@ namespace LaunchCalcDev
         // So I need to capture DATES in here, and then convert these to int distance types in the number crunch section.
         public static bool dataEntryinCode = true;
 
-        /*
-        internal static int dELockIMF = 30;
-        internal static int dEiMFDue = 30;
-        internal static int dEdueLaunch = 30;
         internal static bool dEchildCasting = false;
         internal static bool dEpldlRequred = false;
         internal static bool dEcmWorkflow = false;
-        */
-
+        
 
         // ENTER DATES HERE
         internal static DateTime inputLOCK = new DateTime(2021, 04, 16);
         internal static DateTime inputIMF = new DateTime(2021, 05, 28);
         internal static DateTime inputDue = new DateTime(2021, 07, 28);
 
-        // I'll define which one this goes to based upon enum selection
-        internal static DateTime inputME = new DateTime(2021, 06, 04);
+        internal static DateTime inputME0 = new DateTime(2021, 06, 04);
+        internal static DateTime inputME1 = new DateTime(2021, 05, 14);
 
         // False = ME0, True = ME1 ("Tick this box for M&E Centric timeline")
         internal static bool inputMEWORKFLOW = false;
     }
 
-    public enum contentType
+    public enum ContentType
     {
         feature,
         series
     }
-    public enum sourceLang
+    public enum SourceLang
     {
         English,
         Other
@@ -67,8 +62,10 @@ namespace LaunchCalcDev
         static void Main(string[] args)
 
         {
+
             Data data = new Data();
 
+            data.setEnums();
             data.setupData(data);
         }
 
@@ -79,19 +76,34 @@ namespace LaunchCalcDev
             Console.WriteLine($"Yellow: {yellow.ToShortDateString()}");
             Console.WriteLine($"Red: {red.ToShortDateString()}");
         }
+
+
     }
 
 
     class Data
     {
+        public static ContentType contentType;
+        public static SourceLang sourceLang;
+        public static MEQCWorkflow mEQCWorkflow;
+        public static QCType qCType;
+
         // Input Data (interim storage in this class - pulled at the top from static entry class
         private int lockIMF;
         private int iMFDue;
         private int dueLaunch;
 
+        private int lockME1;
+        private int mE1IMF;
+
+        private int iMFME0;
+        private int mE0Due;
+
         private DateTime lockDate;
         private DateTime iMFDate;
         private DateTime dueDate;
+        private DateTime mE0Date;
+        private DateTime mE1Date;
 
         float yellowFactor;
         float redFactor;
@@ -104,6 +116,52 @@ namespace LaunchCalcDev
         internal DateTime greenOut;
         internal DateTime yellowOut;
         internal DateTime redOut;
+
+        public void setEnums()
+        {
+            switch (contentType)
+            {
+                case ContentType.feature:
+                    contentType = ContentType.feature;
+                    break;
+                case ContentType.series:
+                    contentType = ContentType.series;
+                    break;
+            }
+            switch (sourceLang)
+            {
+                case SourceLang.English:
+                    sourceLang = SourceLang.English;
+                    break;
+                case SourceLang.Other:
+                    sourceLang = SourceLang.Other;
+                    break;
+            }
+            switch (mEQCWorkflow)
+            {
+                case MEQCWorkflow.WF0:
+                    mEQCWorkflow = MEQCWorkflow.WF0;
+                    break;
+                case MEQCWorkflow.WF1:
+                    mEQCWorkflow = MEQCWorkflow.WF1;
+                    break;
+            }
+            switch (qCType)
+            {
+                case QCType.Premix:
+                    qCType = QCType.Premix;
+                    break;
+                case QCType.Postmix:
+                    qCType = QCType.Postmix;
+                    break;
+                case QCType.CQC:
+                    qCType = QCType.CQC;
+                    break;
+            }
+
+
+
+        }
 
 
         public void setupData(Data dataClass)
@@ -129,15 +187,22 @@ namespace LaunchCalcDev
             // Might need to use TotalDays here instead. See how it checks out.
             lockIMF = iMFDate.Subtract(lockDate).Days;
             iMFDue = dueDate.Subtract(iMFDate).Days;
+
+            lockME1 = mE1Date.Subtract(lockDate).Days;
+            mE1IMF = iMFDate.Subtract(mE1Date).Days;
+
+            iMFME0 = mE0Date.Subtract(iMFDate).Days;
+            mE0Due = dueDate.Subtract(mE0Date).Days;
+
             dueLaunch = 30;
 
 
-            totalTimeline = Calculator.crunchTimeline(DateTime.Today, lockIMF, iMFDue, dueLaunch);
+            totalTimeline = Calculator.crunchTimeline(DateTime.Today, lockIMF, iMFDue, lockME1, mE1IMF, iMFME0, mE0Due, dueLaunch);
 
 
             // Set Yellow / Red Offsets
-            yellowFactor = (7);
-            redFactor = (14);
+            yellowFactor = 7;
+            redFactor = 14;
 
             Console.WriteLine("Yellow: " + yellowFactor);
             Console.WriteLine("Red: " + redFactor);
@@ -161,10 +226,10 @@ namespace LaunchCalcDev
             {
                 case 0:
                     date = lockDate.AddDays(timeline);
-                    return date;
+                    break;
                 case 1:
                     date = lockDate.AddDays(timeline - yellowFactor);
-                    return date;
+                    break;
                 case 2:
                     date = lockDate.AddDays(timeline - redFactor);
                     break;
@@ -179,11 +244,16 @@ namespace LaunchCalcDev
         {
             // Check booleans for casting etc here? This is where I take in the manual inputs which we can assume to be defaults for now.
 
+
+
             lockDate = dataEntry.inputLOCK;
             iMFDate = dataEntry.inputIMF;
             dueDate = dataEntry.inputDue;
-        }
 
+            mE0Date = dataEntry.inputME0;
+            mE1Date = dataEntry.inputME1;
+
+        }
 
 
         int setDefaultsErrorInt(int defInt, string defSt)
@@ -206,14 +276,24 @@ namespace LaunchCalcDev
 
     static class Calculator
     {
-        public static int crunchTimeline(DateTime today, int locktoIMF, int iMFtoDue, int duetoLaunch)
+        public static int crunchTimeline(DateTime today, int locktoIMF, int iMFtoDue, int lockME1, int mE1IMF, int iMFME0, int mE0Due, int duetoLaunch)
         {
             // This is where I'm gonna put the more actual mathy stuff.
 
-            int timelineSummed = locktoIMF + iMFtoDue + duetoLaunch;
+            var timelineSummed = new int();
 
+            switch (Data.mEQCWorkflow)
+            {
+                case MEQCWorkflow.WF0:
+                    timelineSummed = locktoIMF + iMFtoDue + duetoLaunch;
+                    break;
+                case MEQCWorkflow.WF1:
+                    timelineSummed = locktoIMF + iMFtoDue + duetoLaunch;
+                    break;
+                default:
+                    break;
+            }
             return timelineSummed;
-
         }
     }
 }
