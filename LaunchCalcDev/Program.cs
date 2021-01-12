@@ -32,6 +32,12 @@ namespace LaunchCalcDev
         internal static bool inputMEWORKFLOW = false;
     }
 
+    public enum CalcScenario
+    {
+        CalculateLaunch1, // Defaulting to this problem for now.
+        BackwardFlush2
+    }
+
     public enum ContentType
     {
         feature,
@@ -58,7 +64,6 @@ namespace LaunchCalcDev
         CQC
     }
 
-
     class Program
     {
         static void Main(string[] args)
@@ -66,8 +71,8 @@ namespace LaunchCalcDev
         {
             Data data = new Data();
 
-            data.setEnums();
-            data.setupData(data);
+            data.SetEnums();
+            data.SetupData();
         }
 
         public static void Output(DateTime dueDate, DateTime green, DateTime yellow, DateTime red)
@@ -81,9 +86,10 @@ namespace LaunchCalcDev
         }
     }
 
-
     class Data
     {
+
+        public static CalcScenario calcScenario;
         public static ContentType contentType;
         public static SourceLang sourceLang;
         public static MEQCWorkflow mEQCWorkflow;
@@ -109,17 +115,24 @@ namespace LaunchCalcDev
         float yellowFactor;
         float redFactor;
 
-
         internal int totalTimeline;
-
 
         // Output Data
         internal DateTime greenOut;
         internal DateTime yellowOut;
         internal DateTime redOut;
 
-        public void setEnums()
+        public void SetEnums()
         {
+            switch (calcScenario)
+            {
+                case CalcScenario.CalculateLaunch1:
+                    calcScenario = CalcScenario.CalculateLaunch1;
+                    break;
+                case CalcScenario.BackwardFlush2:
+                    calcScenario = CalcScenario.BackwardFlush2;
+                    break;
+            }
             switch (contentType)
             {
                 case ContentType.feature:
@@ -164,18 +177,16 @@ namespace LaunchCalcDev
             }
         }
 
-        public void setupData(Data dataClass)
-
+        public void SetupData()
         {
-
-            if (dataEntry.dataEntryinCode == true)
+            if (dataEntry.dataEntryinCode)
             {
-                pullStaticData();
+                PullStaticData();
             }
-            else
+            else // Not worrying about this until I've sorted the static data pull.
 
             {
-                // Not worrying about this until I've sorted the static data pull.
+
 
                 if (lockDate == DateTime.MinValue) { setDefaultsErrorDT(lockDate, "lastLockDate"); }
 
@@ -184,6 +195,7 @@ namespace LaunchCalcDev
                 if (dueLaunch == 0) { dueLaunch = setDefaultsErrorInt(dueLaunch, "dueLaunch"); }
             }
 
+            // Date Finder! This section finds the day gap betweeen each section.
             // Might need to use TotalDays here instead. See how it checks out.
             lockIMF = iMFDate.Subtract(lockDate).Days;
             iMFDue = dueDate.Subtract(iMFDate).Days;
@@ -206,9 +218,9 @@ namespace LaunchCalcDev
             Console.WriteLine("Red: " + redFactor);
 
             // Send values to crunch
-            greenOut = LightSum(0, totalTimeline);
-            yellowOut = LightSum(1, totalTimeline);
-            redOut = LightSum(2, totalTimeline);
+            greenOut = LightSum("green", totalTimeline);
+            yellowOut = LightSum("yellow", totalTimeline);
+            redOut = LightSum("red", totalTimeline);
             Program.Output(dueDate, greenOut, yellowOut, redOut);
         }
 
@@ -216,32 +228,30 @@ namespace LaunchCalcDev
         // The thing I'm multiplying back with for basic testing at this point. This is not realistic and would require a proportional offset of date / launch.
 
 
-        DateTime LightSum(int light, int timeline)
+        DateTime LightSum(string light, int timeline)
         {
             var date = new DateTime();
 
             switch (light)
             {
-                case 0:
+                case "green":
                     date = lockDate.AddDays(timeline);
                     break;
-                case 1:
+                case "yellow":
                     date = lockDate.AddDays(timeline - yellowFactor);
                     break;
-                case 2:
+                case "red":
                     date = lockDate.AddDays(timeline - redFactor);
                     break;
                 default:
                     break;
             }
-
             return date;
         }
 
-        public void pullStaticData()
+        public void PullStaticData()
         {
             // Check booleans for casting etc here? This is where I take in the manual inputs which we can assume to be defaults for now.
-
             lockDate = dataEntry.inputLOCK;
             iMFDate = dataEntry.inputIMF;
             dueDate = dataEntry.inputDue;
@@ -250,7 +260,6 @@ namespace LaunchCalcDev
             mE1Date = dataEntry.inputME1;
         }
 
-
         int setDefaultsErrorInt(int defInt, string defSt)
         {
             // Leaving these all at 30 for now -- remove and pass through once necessary.
@@ -258,12 +267,11 @@ namespace LaunchCalcDev
             Console.WriteLine($"Setting date for {defSt} to default ({defInt}) for debugging. Please ensure all dates have filled values");
             return defInt;
         }
-
         DateTime setDefaultsErrorDT(DateTime defDT, string defSt)
         {
             // Leaving these all at 30 for now -- remove and pass through once necessary.
             defDT = DateTime.MinValue;
-            Console.WriteLine($"Setting date for {defDT} to default ({DateTime.MinValue}) for debugging. Please ensure all dates have filled values");
+            Console.WriteLine($"Setting date for {defDT} to defauPlease ensure all dates have filled values");
             return defDT;
         }
     }
@@ -273,7 +281,14 @@ namespace LaunchCalcDev
     {
         public static int crunchTimeline(DateTime today, int locktoIMF, int iMFtoDue, int locktoME1, int mE1toIMF, int iMFtoME0, int mE0toDue, int duetoLaunch)
         {
-            // This is where I'm gonna put the more actual mathy stuff.
+            //pectedis where I'm gonna put the more ac Maybe 'do' something too. Not sure yet. f the timeline falls out of our expected ParMaybe 'do' something too. Nt sure yet.
+
+            // The IMF is delivering < 8 weeks before launch
+            if ((iMFtoDue + duetoLaunch) < SLA.IMFDUE)
+            {
+                Console.WriteLine($"Warning: The IMF is currenlty due to arrive {(iMFtoDue + duetoLaunch) / 7} weeks before launch. We would typically recommend arriving at least {SLA.IMFDUE/7} weeks before launch.");
+            }
+
 
             var timelineSummed = new int();
 
@@ -298,12 +313,12 @@ namespace LaunchCalcDev
     // SLAs based on Approx Help Centre Documentation (to update) factored in with non-working days. I need to add a switch here depending on feature / batch length.
     public static class SLA
     {
-        public static int LOCKIMF = 42;
-        public static int LOCKME1 = 28;
-        public static int ME1IMF = 14;
-        public static int IMFDUE = 56;
-        public static int IMFME0 = 14;
-        public static int ME0DUE = 42;
-        public static int DUELAUNCH = 28;
+        public static int LOCKIMF = 42;  // 6 weeks
+        public static int LOCKME1 = 28;  // 4 Weeks
+        public static int ME1IMF = 14;   // 2 Weeks
+        public static int IMFDUE = 56;   // 8 Weeks
+        public static int IMFME0 = 14;   // 2 Weeks
+        public static int ME0DUE = 42;   // 6 Weeks
+        public static int DUELAUNCH = 28;// 4 Weeks
     }
 }
